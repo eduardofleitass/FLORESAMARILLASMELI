@@ -1,0 +1,12 @@
+# Archivos temporales del sistema
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Duplicados de las fotos originales de WhatsApp (la pagina usa img1..img9.jpg)
+WhatsApp Image *.jpeg
+
+# Backups y temporales
+*.tmp
+*.bak
+*~
