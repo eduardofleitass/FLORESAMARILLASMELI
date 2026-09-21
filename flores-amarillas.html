@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Un pedacito de mi amor- Florecitas Amarillas</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@600;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    background: #0b0803;
+  }
+
+  body {
+    font-family: 'Great Vibes', cursive;
+    background:
+      radial-gradient(circle at 50% -10%, rgba(255,183,0,0.14) 0%, rgba(255,183,0,0) 55%),
+      linear-gradient(160deg, #0b0803 0%, #150f06 35%, #231806 65%, #090602 100%);
+    background-attachment: fixed;
+    color: #f0dcaa;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Girasoles flotantes */
+  .petal {
+    position: fixed;
+    top: -60px;
+    font-size: 2rem;
+    opacity: 0.3;
+    filter: sepia(0.6) saturate(2.4) brightness(1.25) drop-shadow(0 0 8px rgba(255,190,50,0.5));
+    animation: fall linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(-60px) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.55; }
+    90%  { opacity: 0.55; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 45px;
+    animation: floatIn 1.2s ease-out;
+  }
+  header .icon { font-size: 4.5rem; margin-bottom: 12px; animation: pulse 2.2s ease-in-out infinite; filter: drop-shadow(0 0 18px rgba(255,200,60,0.55)); }
+  header h1 { font-family: 'Great Vibes', cursive; font-size: 4rem; color: #ffc93c; line-height: 1.1; text-shadow: 0 0 26px rgba(255,190,60,0.45); }
+  header p { font-family: 'Dancing Script', cursive; color: #d8b25e; font-size: 1.6rem; margin-top: 10px; }
+
+  @keyframes floatIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.12); }
+  }
+
+  /* Grilla de tarjetas */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 28px;
+    align-items: start;
+  }
+
+  .mem-card {
+    background: linear-gradient(160deg, rgba(48,36,14,0.88), rgba(24,18,8,0.92));
+    border: 1px solid rgba(255,196,80,0.22);
+    border-radius: 22px;
+    padding: 18px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,210,110,0.08);
+    text-align: center;
+    backdrop-filter: blur(6px);
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  }
+  .mem-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255,205,90,0.45);
+    box-shadow: 0 14px 42px rgba(0,0,0,0.65), 0 0 26px rgba(255,180,40,0.22);
+  }
+
+  .img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #120d05;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 0 1px rgba(255,196,80,0.18), inset 0 0 30px rgba(0,0,0,0.7);
+  }
+  .img-wrap img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+  }
+
+  /* Overlay inicial */
+  .cover {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 40%, rgba(255,186,40,0.30) 0%, rgba(0,0,0,0) 65%),
+      linear-gradient(150deg, #33240a, #1a1206 55%, #0d0903);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    line-height: 1.3;
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .cover.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(1.08);
+  }
+  .cover-emoji { font-size: 3.5rem; margin-bottom: 10px; filter: drop-shadow(0 0 14px rgba(255,200,70,0.6)); }
+  .cover-text {
+    font-family: 'Dancing Script', cursive;
+    color: #ffd76e;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 0 15px;
+    text-shadow: 0 0 14px rgba(255,190,60,0.4);
+  }
+  .tap-hint {
+    margin-top: 8px;
+    font-size: 0.95rem;
+    color: #b9923f;
+    font-family: 'Quicksand', sans-serif;
+    opacity: 0.9;
+  }
+
+  /* Mensaje revelado */
+  .love-msg {
+    margin-top: 14px;
+    font-family: 'Great Vibes', cursive;
+    font-size: 2rem;
+    color: #ffc93c;
+    opacity: 0;
+    transform: translateY(10px);
+    text-shadow: 0 0 20px rgba(255,190,60,0.5);
+    transition: opacity 0.8s ease 0.25s, transform 0.8s ease 0.25s;
+  }
+  .love-msg.visible { opacity: 1; transform: translateY(0); }
+  .love-lang {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.9rem;
+    color: #c9a44e;
+    font-weight: 600;
+    margin-top: 4px;
+    text-shadow: none;
+  }
+
+  /* Progreso */
+  .progress-wrap {
+    text-align: center;
+    margin-bottom: 35px;
+    background: rgba(30,22,9,0.85);
+    border: 1px solid rgba(255,196,80,0.2);
+    padding: 14px 24px;
+    border-radius: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,210,110,0.07);
+    backdrop-filter: blur(6px);
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+    position: relative;
+  }
+  .progress-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.3rem;
+    color: #e0b95c;
+    margin-bottom: 8px;
+  }
+  .progress-bar {
+    width: 260px;
+    height: 10px;
+    background: #241a08;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0 auto;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.8);
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #b8860b, #ffc93c, #ffe9a3);
+    border-radius: 10px;
+    box-shadow: 0 0 14px rgba(255,200,60,0.7);
+    transition: width 0.6s ease;
+  }
+
+  /* Final */
+  .final-section {
+    text-align: center;
+    margin-top: 50px;
+    padding: 40px 25px;
+    background: linear-gradient(160deg, rgba(50,37,14,0.9), rgba(20,15,6,0.95));
+    border: 1px solid rgba(255,196,80,0.25);
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 40px rgba(255,170,30,0.12);
+    display: none;
+  }
+  .final-section.show { display: block; animation: floatIn 1s ease-out; }
+  .final-section h2 { font-family: 'Great Vibes', cursive; font-size: 3rem; color: #ffc93c; margin-bottom: 15px; text-shadow: 0 0 26px rgba(255,190,60,0.5); }
+  .final-section p { font-family: 'Dancing Script', cursive; color: #e5cd93; font-size: 1.5rem; line-height: 1.6; max-width: 650px; margin: 0 auto 18px; }
+  .big-heart { font-size: 4rem; animation: pulse 1.8s ease-in-out infinite; margin-top: 10px; filter: drop-shadow(0 0 16px rgba(255,190,60,0.6)); }
+
+  /* Confeti */
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    z-index: 100;
+    animation: confettiFall 3s linear forwards;
+    pointer-events: none;
+  }
+  @keyframes confettiFall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ===== Overlay del girasol que se forma ===== */
+  .sunflower-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(circle at 50% 45%, #1c1406 0%, #0a0703 55%, #000000 100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+  }
+  .sunflower-overlay.active { opacity: 1; pointer-events: auto; }
+
+  .sun-stage {
+    position: relative;
+    width: min(78vw, 460px);
+    height: min(78vw, 460px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sun-svg { width: 100%; height: 100%; overflow: visible; }
+  .sun-svg .whole { transform-box: fill-box; transform-origin: center; }
+
+  /* Halo de luz que late detrás */
+  .sun-glow {
+    position: absolute;
+    width: 78%;
+    height: 78%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,214,90,0.55) 0%, rgba(255,180,40,0.22) 40%, rgba(255,150,0,0) 72%);
+    filter: blur(18px);
+    opacity: 0;
+    animation: glowPulse 3.4s ease-in-out infinite;
+  }
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.5;  transform: scale(0.94); }
+    50%      { opacity: 0.95; transform: scale(1.1); }
+  }
+
+  /* Rayos de luz girando */
+  .sun-rays {
+    position: absolute;
+    width: 118%;
+    height: 118%;
+    border-radius: 50%;
+    background:
+      conic-gradient(from 0deg,
+        rgba(255,210,80,0) 0deg, rgba(255,210,80,0.20) 6deg, rgba(255,210,80,0) 12deg,
+        rgba(255,210,80,0) 40deg, rgba(255,225,130,0.16) 47deg, rgba(255,210,80,0) 54deg,
+        rgba(255,210,80,0) 88deg, rgba(255,210,80,0.20) 95deg, rgba(255,210,80,0) 102deg,
+        rgba(255,210,80,0) 140deg, rgba(255,225,130,0.16) 147deg, rgba(255,210,80,0) 154deg,
+        rgba(255,210,80,0) 190deg, rgba(255,210,80,0.20) 197deg, rgba(255,210,80,0) 204deg,
+        rgba(255,210,80,0) 240deg, rgba(255,225,130,0.16) 247deg, rgba(255,210,80,0) 254deg,
+        rgba(255,210,80,0) 290deg, rgba(255,210,80,0.20) 297deg, rgba(255,210,80,0) 304deg,
+        rgba(255,210,80,0) 340deg, rgba(255,225,130,0.16) 347deg, rgba(255,210,80,0) 354deg);
+    filter: blur(6px);
+    opacity: 0;
+    animation: raysSpin 26s linear infinite, raysFadeIn 2s ease-out 2.6s forwards;
+    pointer-events: none;
+  }
+  @keyframes raysSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes raysFadeIn { to { opacity: 0.85; } }
+
+  /* Pétalos: cada uno crece desde el centro con su propio retardo */
+  .petal-shape {
+    transform-box: fill-box;
+    transform-origin: bottom center;
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+    animation: petalGrow 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  @keyframes petalGrow {
+    0%   { transform: scale(0);    opacity: 0; }
+    60%  { transform: scale(1.14); opacity: 1; }
+    100% { transform: scale(1);    opacity: 1; }
+  }
+
+  /* Centro que brota */
+  .sun-core {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0);
+    opacity: 0;
+    animation: coreGrow 1s cubic-bezier(0.34, 1.56, 0.64, 1) 1.9s forwards;
+  }
+  @keyframes coreGrow {
+    0%   { transform: scale(0);   opacity: 0; }
+    65%  { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1);   opacity: 1; }
+  }
+
+  /* Destello final */
+  .sun-flash {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 0%, rgba(255,235,150,0.85) 25%, rgba(255,190,60,0) 65%);
+    opacity: 0;
+    pointer-events: none;
+    animation: flashBurst 1.5s ease-out 2.7s forwards;
+  }
+  @keyframes flashBurst {
+    0%   { opacity: 0;   transform: scale(0.35); }
+    25%  { opacity: 0.95; transform: scale(1.05); }
+    100% { opacity: 0;   transform: scale(1.6); }
+  }
+
+  /* Chispas que brotan */
+  .sparkle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 0%, rgba(255,220,110,0.9) 45%, rgba(255,180,40,0) 75%);
+    opacity: 0;
+    pointer-events: none;
+    animation: sparkleFly 2.4s ease-out forwards;
+  }
+  @keyframes sparkleFly {
+    0%   { opacity: 0;   transform: rotate(var(--a)) translateY(0) scale(0.4); }
+    18%  { opacity: 1;   transform: rotate(var(--a)) translateY(calc(var(--d) * -0.34)) scale(1.35); }
+    100% { opacity: 0;   transform: rotate(var(--a)) translateY(calc(var(--d) * -1)) scale(0.3); }
+  }
+
+  /* Texto del overlay */
+  .sun-text {
+    margin-top: 22px;
+    text-align: center;
+    padding: 0 22px;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 1s ease 3.1s, transform 1s ease 3.1s;
+  }
+  .sunflower-overlay.formed .sun-text { opacity: 1; transform: translateY(0); }
+  .sun-text h2 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.9rem;
+    color: #ffd76e;
+    text-shadow: 0 0 30px rgba(255,190,60,0.75);
+  }
+  .sun-text p {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.35rem;
+    color: #e6cd93;
+    margin-top: 6px;
+  }
+
+  /* ===== Reproductor de musica ===== */
+  .music-btn {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 300;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,196,80,0.45);
+    background: linear-gradient(160deg, rgba(50,37,14,0.95), rgba(20,15,6,0.98));
+    color: #ffd76e;
+    font-size: 1.4rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.6), 0 0 20px rgba(255,180,40,0.28);
+    transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    backdrop-filter: blur(6px);
+    animation: musicPulse 2.6s ease-in-out infinite;
+  }
+  .music-btn:hover {
+    transform: scale(1.1);
+    border-color: rgba(255,205,90,0.8);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.7), 0 0 30px rgba(255,190,50,0.5);
+  }
+  .music-btn.playing { animation: musicPulse 1.4s ease-in-out infinite; }
+  @keyframes musicPulse {
+    0%, 100% { box-shadow: 0 6px 24px rgba(0,0,0,0.6), 0 0 14px rgba(255,180,40,0.22); }
+    50%      { box-shadow: 0 6px 24px rgba(0,0,0,0.6), 0 0 32px rgba(255,190,50,0.55); }
+  }
+
+  /* Aviso para iniciar la musica (los navegadores bloquean el autoplay) */
+  .music-toast {
+    position: fixed;
+    right: 22px;
+    bottom: 92px;
+    z-index: 300;
+    max-width: 240px;
+    padding: 12px 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,196,80,0.45);
+    background: linear-gradient(160deg, rgba(50,37,14,0.96), rgba(20,15,6,0.98));
+    color: #ffd76e;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.15rem;
+    line-height: 1.3;
+    text-align: center;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.65), 0 0 22px rgba(255,180,40,0.25);
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .music-toast.hide { opacity: 0; transform: translateY(10px); pointer-events: none; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    header h1 { font-size: 2.8rem; }
+    header p { font-size: 1.3rem; }
+    .love-msg { font-size: 1.7rem; }
+    .cover-emoji { font-size: 2.8rem; }
+    .cover-text { font-size: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="petal" style="left:8%; animation-duration:9s; animation-delay:0s;">🌻</div>
+  <div class="petal" style="left:22%; animation-duration:11s; animation-delay:2s;">🌻</div>
+  <div class="petal" style="left:38%; animation-duration:8s; animation-delay:1s;">🌻</div>
+  <div class="petal" style="left:52%; animation-duration:10s; animation-delay:3s;">🌻</div>
+  <div class="petal" style="left:68%; animation-duration:12s; animation-delay:1.5s;">🌻</div>
+  <div class="petal" style="left:82%; animation-duration:9s; animation-delay:0.5s;">🌻</div>
+  <div class="petal" style="left:95%; animation-duration:13s; animation-delay:4s;">🌻</div>
+
+  <div class="container">
+    <header>
+      <div class="icon">🌻</div>
+      <h1>Mis Flores Amarillas</h1>
+      <p>Hola mi amor, toca cada fotito para ir desbloqueando recuerdos ❤️</p>
+    </header>
+
+    <div class="progress-wrap">
+      <div class="progress-text">💛 Descubiertos: <span id="progNum">0</span> de 9 💛</div>
+      <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+    </div>
+
+    <div class="card-grid">
+
+      <div class="mem-card" data-idx="0">
+        <div class="img-wrap" onclick="reveal(0)">
+          <img src="img1.jpg" alt="Recuerdo 1">
+          <div class="cover" id="cover0">
+            <div class="cover-emoji">🌻</div>
+            <div class="cover-text">Toca para descubrir</div>
+            <div class="tap-hint">una sorpresa de amor</div>
+          </div>
+        </div>
+        <div class="love-msg" id="msg0">
+          Te amo mil millones
+          <div class="love-lang">Español</div>
+        </div>
+      </div>
+
+      <div class="mem-card" data-idx="1">
+        <div class="img-wrap" onclick="reveal(1)">
+          <img src="img2.jpg" alt="Recuerdo 2">
+          <div class="cover" id="cover1">
+            <div class="cover-emoji">💛</div>
+            <div class="cover-text">Toca para descubrir</div>
+            <div class="tap-hint">una sorpresa de amor</div>
+          </div>
+        </div>
+        <div class="love-msg" id="msg1">
+          I love you a billion times
+          <div class="love-lang">English</div>
+        </div>
+      </div>
+
+      <div class="mem-card" data-idx="2">
+        <div class="img-wrap" onclick="reveal(2)">
+          <img src="img3.jpg" alt="Recuerdo 3">
+          <div class="cover" id="cover2">
+            <div class="cover-emoji">✨</div>
+            <div class="cover-text">Toca para descubrir</div>
+            <div class="tap-hint">una sorpresa de amor</div>
+          </div>
+        </div>
+        <div class="love-msg" id="msg2">
+          Je t'aime des milliards
+          <div class="love-lang">Français</div>
+        </div>
+      </div>
+
+      <div class="mem-card" data-idx="3">
+        <div class="img-wrap" onclick="reveal(3)">
+          <img src="img4.jpg" alt="Recuerdo 4">
+          <div class="cover" id="cover3">
+            <div class="cover-emoji">🌟</div>
+            <div class="cover-text">Toca para descubrir</div>
+            <div class="tap-hint">una sorpresa de amor</div>
+          </div>
+        </div>
+        <div class="love-msg" id="msg3">
+          Ti amo miliardi di volte
+          <div class="love-lang">Italiano</div>
+        </div>
+      </div>
+
+      <div class="mem-card" data-idx="4">
+        <div class="img-wrap" onclick="reveal(4)">
+          <img src="img5.jpg" alt="Recuerdo 5">
+          <div class="cover" id="cover4">
+            <div class="cover-emoji">🌞</div>
+            <div class="cover-text">Toca para descubrir</div>
+            <div class="tap-hint">una sorpresa de amor</div>
+          </div>
+        </div>
+        <div class="love-msg" id="msg4">
+          Eu te amo bilhões de vezes
+          <div class="love-lang">Português</div>
+        </div>
+      </div>
+
+      <div class="mem-card" data-idx="5">
+        <div class="img-wrap" onclick="reveal(5)">
+          <img src="img6.jpg" alt="Recuerdo 6">
+          <div class="cover" id="cover5">
+            <div class="cover-emoji">🌼</div>
+            <div class="cover-text">Toca para descubrir</div>
+            <div class="tap-hint">una sorpresa de amor</div>
+          </div>
+        </div>
+        <div class="love-msg" id="msg5">
+          Ich liebe dich Milliarden Mal
+          <div class="love-lang">Deutsch</div>
+        </div>
+      </div>
+
+      <div class="mem-card" data-idx="6">
+        <div class="img-wrap" onclick="reveal(6)">
+          <img src="img7.jpg" alt="Recuerdo 7">
+          <div class="cover" id="cover6">
+            <div class="cover-emoji">💫</div>
+            <div class="cover-text">Toca para descubrir</div>
+            <div class="tap-hint">una sorpresa de amor</div>
+          </div>
+        </div>
+        <div class="love-msg" id="msg6">
+          我爱你千千万万遍
+          <div class="love-lang">中文 (Chino)</div>
+        </div>
+      </div>
+
+      <div class="mem-card" data-idx="7">
+        <div class="img-wrap" onclick="reveal(7)">
+          <img src="img8.jpg" alt="Recuerdo 8">
+          <div class="cover" id="cover7">
+            <div class="cover-emoji">🌙</div>
+            <div class="cover-text">Toca para descubrir</div>
+            <div class="tap-hint">una sorpresa de amor</div>
+          </div>
+        </div>
+        <div class="love-msg" id="msg7">
+          何十億回も愛してる
+          <div class="love-lang">日本語 (Japonés)</div>
+        </div>
+      </div>
+
+      <div class="mem-card" data-idx="8">
+        <div class="img-wrap" onclick="reveal(8)">
+          <img src="img9.jpg" alt="Recuerdo 9">
+          <div class="cover" id="cover8">
+            <div class="cover-emoji">🌻</div>
+            <div class="cover-text">Toca para descubrir</div>
+            <div class="tap-hint">la última sorpresa</div>
+          </div>
+        </div>
+        <div class="love-msg" id="msg8">
+          십억 번 사랑해
+          <div class="love-lang">한국어 (Coreano)</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="final-section" id="finalMsg">
+      <div class="big-heart">🌻💛🌻</div>
+      <h2>Gracias por estar conmigo y alegrarme mis días</h2>
+      <p>
+        En cada idioma del mundo, en cada forma de decirlo,<br>
+        la verdad es siempre la misma:<br>
+        <strong>Te amo mil millones de veces.</strong><br><br>
+        Gracias por ser mi girasol, mi luz y mi persona favorita, se que no es mucho pero quiero que sepas que no importa el día siempre quiero que te sientas especial mi princesa hermosa❤️.
+      </p>
+      <div class="big-heart">💛</div>
+    </div>
+  </div>
+
+  <div class="sunflower-overlay" id="sunOverlay">
+    <div class="sun-stage" id="sunStage">
+      <div class="sun-glow"></div>
+      <div class="sun-rays"></div>
+      <svg class="sun-svg" id="sunSvg" viewBox="0 0 400 400" aria-hidden="true"></svg>
+      <div class="sun-flash"></div>
+    </div>
+    <div class="sun-text">
+      <h2>Nuestro girasol</h2>
+      <p>Nació de cada recuerdo que tocaste, mi amor 🌻</p>
+    </div>
+  </div>
+
+  <audio id="bgMusic" src="musica.mp3" loop preload="auto"></audio>
+
+  <div class="music-toast" id="musicToast" onclick="toggleMusic()">
+    🎵 Tócame para poner<br>una canción dedicada con mucho amor
+  </div>
+
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Música" aria-label="Reproducir o pausar música">♪</button>
+
+<script>
+  const revealed = new Array(9).fill(false);
+
+  function reveal(idx) {
+    if (revealed[idx]) return;
+    document.getElementById('cover' + idx).classList.add('hidden');
+    document.getElementById('msg' + idx).classList.add('visible');
+    revealed[idx] = true;
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const count = revealed.filter(Boolean).length;
+    document.getElementById('progNum').textContent = count;
+    document.getElementById('progFill').style.width = (count / 9 * 100) + '%';
+    if (count === 9) {
+      // Primero florece el girasol, luego se revela el mensaje final
+      setTimeout(() => {
+        showSunflower();
+        // Cuando el usuario cierre el girasol, mostramos el final
+        const overlay = document.getElementById('sunOverlay');
+        const onClose = () => {
+          overlay.removeEventListener('click', onClose);
+          setTimeout(() => {
+            const final = document.getElementById('finalMsg');
+            final.classList.add('show');
+            final.scrollIntoView({ behavior: 'smooth' });
+            launchConfetti();
+          }, 950);
+        };
+        setTimeout(() => overlay.addEventListener('click', onClose), 4200);
+      }, 800);
+    }
+  }
+
+  function launchConfetti() {
+    const colors = ['#ffd700', '#ffb300', '#ff8c00', '#ffe082', '#fff3cd', '#ff6f00'];
+    for (let i = 0; i < 80; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+      el.style.width = (6 + Math.random() * 10) + 'px';
+      el.style.height = (6 + Math.random() * 10) + 'px';
+      el.style.animationDuration = (2 + Math.random() * 2.5) + 's';
+      el.style.animationDelay = (Math.random() * 1) + 's';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
+    }
+  }
+
+  /* ===== Girasol que se forma desde cero ===== */
+  const sunSvg = document.getElementById('sunSvg');
+  const sunOverlay = document.getElementById('sunOverlay');
+
+  function buildSunflower() {
+    const NS = 'http://www.w3.org/2000/svg';
+    const cx = 200, cy = 200;
+    const petals = 26;
+    const innerR = 46;
+
+    // Grupo principal
+    const g = document.createElementNS(NS, 'g');
+
+    // Definiciones de gradientes
+    const defs = document.createElementNS(NS, 'defs');
+    defs.innerHTML = `
+      <radialGradient id="petalGrad" cx="50%" cy="90%" r="80%">
+        <stop offset="0%"  stop-color="#ffe9a3"/>
+        <stop offset="45%" stop-color="#ffc93c"/>
+        <stop offset="100%" stop-color="#e08a00"/>
+      </radialGradient>
+      <radialGradient id="petalGrad2" cx="50%" cy="90%" r="80%">
+        <stop offset="0%"  stop-color="#fff4c9"/>
+        <stop offset="45%" stop-color="#ffd76e"/>
+        <stop offset="100%" stop-color="#f0a11a"/>
+      </radialGradient>
+      <radialGradient id="coreGrad" cx="42%" cy="38%" r="72%">
+        <stop offset="0%"  stop-color="#6b4a17"/>
+        <stop offset="55%" stop-color="#4a3009"/>
+        <stop offset="100%" stop-color="#241704"/>
+      </radialGradient>
+      <radialGradient id="glowSoft" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"  stop-color="rgba(255,225,140,0.65)"/>
+        <stop offset="100%" stop-color="rgba(255,180,40,0)"/>
+      </radialGradient>
+    `;
+    g.appendChild(defs);
+
+    // Halo suave interior
+    const halo = document.createElementNS(NS, 'circle');
+    halo.setAttribute('cx', cx); halo.setAttribute('cy', cy);
+    halo.setAttribute('r', 190);
+    halo.setAttribute('fill', 'url(#glowSoft)');
+    halo.setAttribute('class', 'whole');
+    halo.style.animation = 'coreGrow 1.6s ease-out 2.2s forwards';
+    g.appendChild(halo);
+
+    // Pétalos en dos capas (exterior e interior, alternados)
+    for (let layer = 0; layer < 2; layer++) {
+      const count = layer === 0 ? petals : petals - 4;
+      const len = layer === 0 ? 128 : 92;
+      const wid = layer === 0 ? 30 : 24;
+      const offset = layer === 0 ? 0 : (Math.PI / count);
+      const grad = layer === 0 ? 'url(#petalGrad)' : 'url(#petalGrad2)';
+
+      for (let i = 0; i < count; i++) {
+        const angle = (i / count) * Math.PI * 2 + offset;
+        const deg = angle * 180 / Math.PI;
+
+        const petal = document.createElementNS(NS, 'path');
+        // Pétalo tipo hoja: nace del centro y se abre
+        const tipY = -(innerR + len);
+        const c1x = -wid, c1y = -innerR - len * 0.55;
+        const c2x = wid,  c2y = -innerR - len * 0.55;
+        petal.setAttribute('d',
+          `M 0 ${-innerR}
+           C ${c1x} ${c1y}, ${c1x * 0.85} ${tipY * 0.86}, 0 ${tipY}
+           C ${c2x * 0.85} ${tipY * 0.86}, ${c2x} ${c1y}, 0 ${-innerR} Z`
+        );
+        petal.setAttribute('fill', grad);
+        petal.setAttribute('stroke', layer === 0 ? 'rgba(255,240,180,0.55)' : 'rgba(255,250,220,0.5)');
+        petal.setAttribute('stroke-width', layer === 0 ? '1.4' : '1');
+        petal.setAttribute('class', 'petal-shape');
+        // Retardo escalonado: los pétalos brotan uno tras otro
+        const delay = 0.15 + (i / count) * 1.5 + layer * 0.25;
+        petal.style.animationDelay = delay + 's';
+
+        // Posicionar el pétalo girando alrededor del centro
+        const wrapper = document.createElementNS(NS, 'g');
+        wrapper.setAttribute('transform', `translate(${cx} ${cy}) rotate(${deg})`);
+        wrapper.appendChild(petal);
+        g.appendChild(wrapper);
+      }
+    }
+
+    // Círculo oscuro del centro (base)
+    const coreBase = document.createElementNS(NS, 'circle');
+    coreBase.setAttribute('cx', cx); coreBase.setAttribute('cy', cy);
+    coreBase.setAttribute('r', innerR);
+    coreBase.setAttribute('fill', 'url(#coreGrad)');
+    coreBase.setAttribute('class', 'sun-core');
+    coreBase.style.filter = 'drop-shadow(0 0 18px rgba(255,190,60,0.85))';
+    g.appendChild(coreBase);
+
+    // Semillas del centro (patrón de puntos dorados)
+    const seedGroup = document.createElementNS(NS, 'g');
+    seedGroup.setAttribute('class', 'sun-core');
+    seedGroup.style.animationDelay = '2.1s';
+    for (let ring = 0; ring < 5; ring++) {
+      const r = 8 + ring * 8;
+      const n = 6 + ring * 5;
+      for (let k = 0; k < n; k++) {
+        const a = (k / n) * Math.PI * 2 + ring * 0.5;
+        const dot = document.createElementNS(NS, 'circle');
+        dot.setAttribute('cx', cx + Math.cos(a) * r);
+        dot.setAttribute('cy', cy + Math.sin(a) * r);
+        dot.setAttribute('r', 1.9);
+        dot.setAttribute('fill', 'rgba(255,205,90,0.75)');
+        seedGroup.appendChild(dot);
+      }
+    }
+    g.appendChild(seedGroup);
+
+    // Anillo brillante en el borde del centro
+    const ring = document.createElementNS(NS, 'circle');
+    ring.setAttribute('cx', cx); ring.setAttribute('cy', cy);
+    ring.setAttribute('r', innerR - 2);
+    ring.setAttribute('fill', 'none');
+    ring.setAttribute('stroke', 'rgba(255,215,110,0.8)');
+    ring.setAttribute('stroke-width', '3');
+    ring.setAttribute('class', 'sun-core');
+    ring.style.animationDelay = '1.95s';
+    ring.style.filter = 'drop-shadow(0 0 8px rgba(255,200,70,0.9))';
+    g.appendChild(ring);
+
+    // Grupo giratorio suave de todo el girasol
+    const spin = document.createElementNS(NS, 'g');
+    spin.setAttribute('class', 'whole');
+    spin.style.animation = 'none';
+    spin.appendChild(g);
+
+    sunSvg.innerHTML = '';
+    sunSvg.appendChild(spin);
+
+    // Chispas que brotan alrededor
+    const stage = document.getElementById('sunStage');
+    stage.querySelectorAll('.sparkle').forEach(s => s.remove());
+    for (let i = 0; i < 26; i++) {
+      const sp = document.createElement('div');
+      sp.className = 'sparkle';
+      const ang = (i / 26) * 360 + Math.random() * 10;
+      const dist = 120 + Math.random() * 130;
+      sp.style.setProperty('--a', ang + 'deg');
+      sp.style.setProperty('--d', dist + 'px');
+      sp.style.animationDelay = (2.8 + Math.random() * 1.6) + 's';
+      sp.style.width = sp.style.height = (4 + Math.random() * 6) + 'px';
+      stage.appendChild(sp);
+    }
+  }
+
+  function showSunflower() {
+    buildSunflower();
+    sunOverlay.classList.add('active');
+    // Marcar formado para que aparezca el texto
+    setTimeout(() => sunOverlay.classList.add('formed'), 2900);
+    // Cerrar al hacer clic (después de que se forme)
+    setTimeout(() => {
+      sunOverlay.addEventListener('click', closeSunflower, { once: true });
+      sunOverlay.style.cursor = 'pointer';
+    }, 4200);
+  }
+
+  function closeSunflower() {
+    sunOverlay.style.cursor = 'default';
+    sunOverlay.classList.remove('active', 'formed');
+    setTimeout(() => { sunOverlay.style.display = 'none'; }, 900);
+  }
+
+  window.showSunflower = showSunflower;
+
+  /* ===== Musica de fondo ===== */
+  const bgMusic = document.getElementById('bgMusic');
+  const musicBtn = document.getElementById('musicBtn');
+  const musicToast = document.getElementById('musicToast');
+  const MUSIC_VOLUME = 0.35;   // volumen agradable, no invasivo
+  let musicFadeTimer = null;
+
+  function fadeTo(target, ms) {
+    if (musicFadeTimer) clearInterval(musicFadeTimer);
+    const steps = Math.max(1, Math.round(ms / 40));
+    const start = bgMusic.volume;
+    const delta = (target - start) / steps;
+    let i = 0;
+    musicFadeTimer = setInterval(() => {
+      i++;
+      let v = start + delta * i;
+      v = Math.min(1, Math.max(0, v));
+      bgMusic.volume = v;
+      if (i >= steps) {
+        clearInterval(musicFadeTimer);
+        musicFadeTimer = null;
+        bgMusic.volume = Math.min(1, Math.max(0, target));
+      }
+    }, 40);
+  }
+
+  function toggleMusic() {
+    if (bgMusic.paused) {
+      bgMusic.volume = 0;
+      const p = bgMusic.play();
+      if (p && p.catch) p.catch(() => {});
+      fadeTo(MUSIC_VOLUME, 1600);
+      musicBtn.textContent = '❚❚';
+      musicBtn.classList.add('playing');
+      musicToast.classList.add('hide');
+    } else {
+      fadeTo(0, 700);
+      setTimeout(() => bgMusic.pause(), 720);
+      musicBtn.textContent = '♪';
+      musicBtn.classList.remove('playing');
+    }
+  }
+
+  // Los navegadores no permiten autoplay con sonido: intentamos igual
+  // y, si lo bloquean, el aviso invita a tocar. El primer clic en la
+  // pagina tambien arranca la musica.
+  function tryAutoplay() {
+    bgMusic.volume = 0;
+    const p = bgMusic.play();
+    if (p && p.then) {
+      p.then(() => {
+        fadeTo(MUSIC_VOLUME, 2200);
+        musicBtn.textContent = '❚❚';
+        musicBtn.classList.add('playing');
+        musicToast.classList.add('hide');
+      }).catch(() => { /* bloqueado: esperamos el primer clic */ });
+    }
+  }
+
+  let musicStarted = false;
+  function startMusicOnFirstInteraction() {
+    if (musicStarted) return;
+    musicStarted = true;
+    if (bgMusic.paused) toggleMusic();
+    document.removeEventListener('click', startMusicOnFirstInteraction);
+    document.removeEventListener('touchstart', startMusicOnFirstInteraction);
+    document.removeEventListener('keydown', startMusicOnFirstInteraction);
+  }
+  document.addEventListener('click', startMusicOnFirstInteraction);
+  document.addEventListener('touchstart', startMusicOnFirstInteraction);
+  document.addEventListener('keydown', startMusicOnFirstInteraction);
+
+  window.addEventListener('load', tryAutoplay);
+</script>
+</body>
+</html>
